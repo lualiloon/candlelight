@@ -7,53 +7,51 @@
             [candle.text-graphics :as g]
             [candle.utils :as u]))
 
-;; TODO:
-;;   We can't output directly to the screen, we have to create a text-graphics
-;;   object and interface with that. Because of this, when a screen is created
-;;   it should create both a screen and a graphics object (perhaps in a map).
-;;   All functions would then take the map as input, and interact with the part
-;;   it needs.
-;;   However, it also needs to make sense to create more graphics objects on
-;;   the existing screen and use them too.
 
 (defn new-screen
   ([]
    (new-screen (t/new-terminal))) 
   ([term]
-   (TerminalScreen. term)))
+   (let [screen (TerminalScreen. term)]
+     {:terminal term
+      :screen screen
+      :graphics (g/new-graphics screen)})))
 
+;; TODO: make sure t/start! is truly idempotent (so it doesn't matter if it was
+;;       already started)
 (defn start!
-  [scr]
-  (.startScreen scr))
+  [screen]
+  (t/start! (:terminal screen))
+  (.startScreen (:screen screen)))
 
 (defn stop!
-  [scr]
-  (.stopScreen scr))
+  [screen]
+  (.stopScreen (:screen screen)))
 
 (defn hide-cursor!
-  [scr]
-  (.setCursorPosition scr nil))
+  [screen]
+  (.setCursorPosition (:screen screen) nil))
 
 
 (defn get-size
-  [scr]
-  (let [size (.getTerminalSize scr)
+  [screen]
+  (let [size (.getTerminalSize (:screen screen))
         width (.getColumns size)
         height (.getRows size)]
     [width height]))
 
 (defn clear!
-  [scr]
-  (.clear scr))
+  [screen]
+  (.clear (:screen screen)))
 
 (defn refresh!
-  [scr]
-  (.refresh scr))
+  [screen]
+  (.refresh (:screen screen)))
+
+(defn write!
+  [screen x y string & {:keys [fg bg] :as colors}]
+  (g/write! (:graphics screen) x y string :fg fg :bg bg))
 
 ;;; ------------------ For Dev Testing ---------------------
 
-(defonce term (t/new-terminal))
-
-(defonce scr (new-screen term))
-
-(defonce graph (g/new-graphics scr))
+(defonce scr (new-screen))

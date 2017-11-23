@@ -1,5 +1,10 @@
 (ns candle.utils
-  (:import com.googlecode.lanterna.TextColor))
+  (:import com.googlecode.lanterna.TextColor
+           com.googlecode.lanterna.SGR))
+
+
+;; Changing this namespace to "candle.colors" may make it more intuitive for
+;; other people to use.
 
 
 (defn ansi-color
@@ -22,3 +27,13 @@
   []
   (ansi-color (rand-nth [:black :blue :cyan :green
                          :magenta :red :white :yellow])))
+
+(defn rgb
+  [r g b]
+  (new com.googlecode.lanterna.TextColor$RGB r g b))
+
+
+(defn sgr-style
+  [style-k]
+  (get {:bold SGR/BOLD}
+       style-k))

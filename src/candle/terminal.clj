@@ -1,12 +1,13 @@
 (ns candle.terminal
   (:import
    com.googlecode.lanterna.terminal.Terminal
-;;   com.googlecode.lanterna.terminal.swing.SwingTerminal
    com.googlecode.lanterna.terminal.swing.SwingTerminalFrame
-;;   com.googlecode.lanterna.terminal.DefaultTerminalFactory
-   com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger
-   com.googlecode.lanterna.TextColor
-   com.googlecode.lanterna.SGR))
+   com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger)
+  (:require
+   [candle.utils :as u]))
+
+
+;; NOTE: You can use text-graphics with the terminal.
 
 
 ;;; ------------------- Terminal Layer ----------------------------
@@ -19,13 +20,6 @@
    "testing"
    (into-array [TerminalEmulatorAutoCloseTrigger/CloseOnExitPrivateMode])))
 
-(defn text-graphics
-  [term]
-  (.newTextGraphics term))
-
-(defn rgb
-  [r g b]
-  (new com.googlecode.lanterna.TextColor$RGB r g b))
 
 (defn start!
   [term]
@@ -36,18 +30,9 @@
   [term]
   (.setVisible term false)
   (.exitPrivateMode term)
-  ;; We don't call this because we set the terminal to close automatically
-  ;; when we exit private mode.
-  #_(.close term))
-
-(defn hide-terminal!
-  [term]
-  (.setVisible term false))
-
-(defn unhide-terminal!
-  [term]
-  (.setVisible term true))
-
+  ;; We don't call (.close term) because we set the terminal to close
+  ;; automatically when we exit private mode.
+  )
 
 (defn move-to!
   [term x y]
@@ -60,37 +45,21 @@
                                  (.withRelativeRow dy)
                                  (.withRelativeColumn dx)))))
 
-(defn ansi-color
-  [color-k]
-  (let [color-s (get {:blue "BLUE"
-                      :yellow "YELLOW"
-                      :white "WHITE"
-                      :black "BLACK"
-                      :default "DEFAULT"}
-                     color-k)]
-    (eval
-     (symbol
-      (str "com.googlecode.lanterna.TextColor$ANSI/" color-s)))))
-
 
 (defn set-background!
-  [term & {:keys [ansi]
-           :or {ansi :white}}]
-  (.setBackgroundColor term (ansi-color ansi)))
+  [term & {:keys [color]
+           :or {color (u/ansi-color :black)}}]
+  (.setBackgroundColor term color))
 
 (defn set-foreground!
-  [term & {:keys [ansi]
-           :or {ansi :white}}]
-  (.setForegroundColor term (ansi-color ansi)))
+  [term & {:keys [color]
+           :or {color (u/ansi-color :white)}}]
+  (.setForegroundColor term color))
 
-(defn sgr-style
-  [style-k]
-  (get {:bold SGR/BOLD}
-       style-k))
 
 (defn set-style!
   [term style-k]
-  (.enableSGR term (sgr-style style-k)))
+  (.enableSGR term (u/sgr-style style-k)))
 
 
 ;; TODO: figure out how to get the current cursor visibility, and combine 
@@ -109,14 +78,9 @@
   (.putCharacter term c))
 
 (defn put-string!
-  [graphics x y string & {:keys [style]}]
-  (if style
-    (.putString graphics x y string (sgr-style style))
-    (.putString graphics x y string)))
-
-(defn redraw!
-  [term]
-  (.flush term))
+  [term string]
+  (doseq [c string]
+    (put-char! term c)))
 
 (defn write!
   [term char-or-string]
@@ -125,13 +89,21 @@
     (put-char! term char-or-string))
   (redraw! term))
 
+(defn write-at!
+  [term x y char-or-string]
+  (move-to! term x y)
+  (write! term char-or-string))
+
+(defn redraw!
+  [term]
+  (.flush term))
+
 (defn clear!
   [term]
-  (.clearScreen term)
-  (redraw! term))
+  (.clearScreen term))
 
 
 ;;; --------------------- For Dev Testing ------------------------
 
-;; (defonce term (new-terminal))
-;; (defonce g (text-graphics term))
+(defonce term (new-terminal))
+
