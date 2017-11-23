@@ -105,5 +105,6 @@
 
 ;;; --------------------- For Dev Testing ------------------------
 
-(defonce term (new-terminal))
+;; (defonce term (new-terminal))
+
 
