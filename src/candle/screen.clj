@@ -3,9 +3,10 @@
            com.googlecode.lanterna.TextColor
            com.googlecode.lanterna.TextCharacter
            com.googlecode.lanterna.SGR)
-  (:require [candle.terminal :as t]
-            [candle.text-graphics :as g]
-            [candle.utils :as u]))
+  (:require 
+   [candle.text-graphics :as g]
+   [candle.utils :as u]
+   [candle.terminal :as t]))
 
 
 (defn new-screen

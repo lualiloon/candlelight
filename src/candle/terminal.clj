@@ -86,8 +86,7 @@
   [term char-or-string]
   (if (seq char-or-string)
     (put-string! term char-or-string)
-    (put-char! term char-or-string))
-  (redraw! term))
+    (put-char! term char-or-string)))
 
 (defn write-at!
   [term x y char-or-string]
