@@ -53,6 +53,7 @@
   [screen x y string & {:keys [fg bg] :as colors}]
   (g/write! (:graphics screen) x y string :fg fg :bg bg))
 
+
 ;;; ------------------ For Dev Testing ---------------------
 
 ;; (defonce scr (new-screen))

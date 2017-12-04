@@ -1,10 +1,48 @@
 # candle
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure wrapper around the Java Lanterna library, for terminal output.
 
 ## Usage
 
-FIXME
+In your project.clj dependancies:
+
+```clojure
+[candle "0.1.2-SNAPSHOT"]
+```
+
+To use the screen layer:
+```clojure
+(ns my-example
+  (:require 
+    [candle.screen :as scr]
+    [candle.utils :as u]))
+
+(defonce screen (scr/new-screen)) ; creates all the necessary parts for a new screen
+
+;; Open a window for the screen
+(scr/start! screen)
+
+;; In order to see anything on the screen (including the cursor), we must manually refresh it.
+(scr/refresh! screen)
+;; You must also refresh the screen each time you want to see changes that have been made.
+
+;; The cursor is pretty useless in the screen layer, as it doesn't move with the text. Let's hide it.
+(scr/hide-cursor! screen)
+
+;; And refresh to show the change
+(scr/refresh! screen)
+
+;; Let's try writing something on our screen
+(scr/write! screen 10 5 "Hello World!")
+
+;; scr/write! also takes optional foreground and background colors
+(scr/write! screen
+            0 0 
+            "A second hello." 
+            :fg (u/rgb 55 255 100) 
+            :bg (u/ansi-color :yellow))
+;; (Note: ANSI yellow looks more like orange than yellow)
+```
 
 ## License
 
