@@ -50,6 +50,10 @@ To use the screen layer:
 ;; (Note: ANSI yellow looks more like orange than yellow)
 
 
+;; To resize the screen, drag the corner of the screen window like you would with any other window on your desktop. You must call update-size! for the screen to recognize the new size.
+(scr/update-size! screen)
+
+
 ;; To close the screen
 (scr/stop! screen)
 

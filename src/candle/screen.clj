@@ -41,6 +41,11 @@
         height (.getRows size)]
     [width height]))
 
+
+(defn update-size!
+  [screen]
+  (.doResizeIfNecessary (:screen scr)))
+
 (defn clear!
   [screen]
   (.clear (:screen screen)))
