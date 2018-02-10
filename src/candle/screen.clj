@@ -44,7 +44,7 @@
 
 (defn update-size!
   [screen]
-  (.doResizeIfNecessary (:screen scr)))
+  (.doResizeIfNecessary (:screen screen)))
 
 (defn clear!
   [screen]
