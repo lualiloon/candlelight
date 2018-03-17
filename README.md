@@ -42,7 +42,6 @@ To use the screen layer:
 
 ;; Let's try writing something on our screen
 (scr/write! screen 10 5 "Hello World!")
-
 (scr/refresh! screen)
 
 
