@@ -26,7 +26,7 @@ To use the screen layer:
 (scr/start! screen)
 
 ;; In order to see anything on the screen (including the cursor), we must
-;;   manually refresh it.
+;; manually refresh it.
 (scr/refresh! screen)
 ;; You must also refresh the screen each time you want to see changes that have
 ;; been made. You do not have to refresh after every change, only when you want
