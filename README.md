@@ -18,8 +18,8 @@ To use the screen layer:
     [candle.utils :as u]))
 
 ;; The 'new-screen' initializes a screen and all it's related parts, and returns
-;; them all in a single map. This map should be passed to all other functions in
-;; the candle.screen namespace, generally as the first argument.
+;; them all in a single map. This map should be passed to any function that
+;; takes a "screen" argument.
 (defonce screen (scr/new-screen)) 
 
 ;; Open a window for the screen
